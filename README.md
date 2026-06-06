@@ -23,11 +23,10 @@ Works on both Apple Silicon (M1/M2/M3/M4) and Intel Macs. macOS 13 or later.
 ## How to use
 
 1. Click into any text field — notes, chat, email, code editor, anything
-2. Press your dictation hotkey
-3. Speak naturally
-4. Your words appear as text, right where your cursor is
+2. **Hold the Fn (🌐 Globe) key** and speak naturally
+3. **Release** the key — your words appear as text, right where your cursor is
 
-That's it. No accounts, no setup wizard.
+Hold to talk, release to type. That's it — no account required.
 
 ## Why you'll like it
 
@@ -37,9 +36,31 @@ That's it. No accounts, no setup wizard.
 - **Free** — no subscription, no sign-up
 - **Auto-updates** — always get the latest version automatically
 
+## Custom vocabulary
+
+Teach VoiceFlow the names, jargon, and spellings you use so it gets them right every time.
+
+Open **Settings → Vocabulary** and add your terms:
+
+- Separate entries with commas, new lines, semicolons, or slashes
+- Force a specific spelling with `alias -> Preferred Name` — e.g. `voice flow -> VoiceFlow`
+- Map several spoken variants to one term with `|` — e.g. `vf | voice flow -> VoiceFlow`
+
+## Smarter cleanup (optional)
+
+Connect an AI model to automatically polish your dictation — punctuation, capitalization, and tidier phrasing — while respecting your custom vocabulary.
+
+Open **Settings → Transcription → Post-processing & context** and:
+
+1. Enter the **Base URL** and **API key** for any OpenAI-compatible service
+2. Pick a **model**
+3. Turn on **Post-processing (smart cleanup)**
+
+This is entirely optional. Without it, your speech is transcribed locally and inserted as-is. With it on, your transcribed text is sent only to the service you configure here.
+
 ## Privacy
 
-VoiceFlow processes your speech locally on your Mac. Your audio and transcripts are not uploaded anywhere by default.
+VoiceFlow processes your speech locally on your Mac. Your audio and transcripts are not uploaded anywhere by default. (If you turn on optional post-processing, your transcribed text is sent to the AI service you configure — and nothing else.)
 
 ## Updates
 
