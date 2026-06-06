@@ -56,11 +56,13 @@ Open **Settings → Transcription → Post-processing & context** and:
 2. Pick a **model**
 3. Turn on **Post-processing (smart cleanup)**
 
-This is entirely optional. Without it, your speech is transcribed locally and inserted as-is. With it on, your transcribed text is sent only to the service you configure here.
+This is entirely optional. Without it, your speech is transcribed locally and inserted as-is. With it on, your transcribed text is sent to the service you configure here for cleanup.
 
 ## Privacy
 
-VoiceFlow processes your speech locally on your Mac. Your audio and transcripts are not uploaded anywhere by default. (If you turn on optional post-processing, your transcribed text is sent to the AI service you configure — and nothing else.)
+VoiceFlow processes your speech locally on your Mac. Your audio and transcripts are not uploaded anywhere by default.
+
+If you turn on optional post-processing, your transcribed text is sent to the AI service you configure. If you also enable context-aware cleanup, VoiceFlow may additionally send details about your active window — its title, any selected text, and a screenshot of that window — to the same service to improve corrections. These features are off by default; nothing leaves your Mac unless you turn them on.
 
 ## Updates
 
