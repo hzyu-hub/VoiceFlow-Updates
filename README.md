@@ -32,6 +32,7 @@ Hold to talk, release to type. That's it — no account required.
 
 - **Fast & on-device** — speech recognition runs locally on your Mac
 - **Works everywhere** — any app, any text field
+- **Multilingual** — recognizes Chinese, English, Japanese, Korean & Cantonese; auto-detects by default, or lock a language in Settings
 - **Private by default** — your voice and text stay on your machine
 - **Free** — no subscription, no sign-up
 - **Auto-updates** — always get the latest version automatically
