@@ -1,0 +1,70 @@
+name: Copy retained release asset
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Copy and verify retained macOS installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import urllib.request
+
+          repo = "hzyu-hub/VoiceFlow-Updates"
+          name = "VoiceFlow-1.9.119-macOS-universal.dmg"
+          expected_size = 954327609
+          expected_hash = "7782b40e1258f3e40426b29d1f37f7d59dca2acb28f99567b6b1c3828191e954"
+          source_id = 447716307
+          target_id = 447846804
+
+          def api(endpoint):
+              return json.loads(subprocess.check_output(["gh", "api", endpoint], text=True))
+
+          target = api(f"repos/{repo}/releases/{target_id}")
+          assert target["draft"] and target["tag_name"] == "v1.9.120"
+          existing = next((asset for asset in target["assets"] if asset["name"] == name), None)
+          if existing:
+              assert existing["state"] == "uploaded" and existing["size"] == expected_size
+              assert existing["digest"] == "sha256:" + expected_hash
+              print("PASS: retained installer already uploaded and verified.")
+              raise SystemExit(0)
+          source = api(f"repos/{repo}/releases/{source_id}")
+          assert not source["draft"] and source["tag_name"] == "v1.9.119"
+          asset = next(asset for asset in source["assets"] if asset["name"] == name)
+          assert asset["state"] == "uploaded" and asset["size"] == expected_size
+          assert asset["digest"] == "sha256:" + expected_hash
+          url = f"https://github.com/{repo}/releases/download/v1.9.119/{name}"
+          assert asset["browser_download_url"] == url
+          path = Path(os.environ["RUNNER_TEMP"]) / name
+          with urllib.request.urlopen(url, timeout=60) as response, path.open("wb") as output:
+              while block := response.read(1024 * 1024):
+                  output.write(block)
+          with path.open("rb") as stream:
+              actual_hash = hashlib.file_digest(stream, "sha256").hexdigest()
+          assert path.stat().st_size == expected_size and actual_hash == expected_hash
+          print("PASS: downloaded original macOS installer and verified its SHA-256.", flush=True)
+          response_file = path.with_suffix(".response.json")
+          upload_url = f"https://uploads.github.com/repos/{repo}/releases/{target_id}/assets?name={name}"
+          with response_file.open("wb") as output:
+              subprocess.run(["gh", "api", "--hostname", "github.com", upload_url,
+                              "--method", "POST", "--input", str(path),
+                              "-H", "Content-Type: application/octet-stream"],
+                             check=True, stdout=output)
+          uploaded = json.loads(response_file.read_text())
+          assert uploaded["state"] == "uploaded" and uploaded["size"] == expected_size
+          assert uploaded["digest"] == "sha256:" + expected_hash
+          print("PASS: retained macOS installer copied to v1.9.120 and server checksum verified.")
+          PY
